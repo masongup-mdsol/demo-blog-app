@@ -10,6 +10,11 @@
   </head>
 
   <body>
+    <% if user_signed_in? %>
+      <div>Hello, <%= current_user.email %>!</div>
+    <% else %>
+      <div><%= link_to 'Sign In', new_user_session_path %> or <%= link_to 'Create an Account', new_user_registration_path %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
