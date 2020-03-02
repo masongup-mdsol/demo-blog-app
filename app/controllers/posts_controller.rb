@@ -1,11 +1,12 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_user, only: [:edit, :update, :destroy]
+  before_action :authorize_user_to_edit, only: [:edit, :update, :destroy]
+  before_action :authorize_user_to_view, only: [:show]
 
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.where(user: current_user).or(Post.where(published: true))
   end
 
   # GET /posts/1
@@ -73,9 +74,16 @@ class PostsController < ApplicationController
       params.require(:post).permit(:title, :body, :published)
     end
 
-    def authorize_user
+    def authorize_user_to_edit
       unless current_user == @post.user
         flash[:notice] = 'You are not authorized to modify that post'
+        redirect_to posts_path
+      end
+    end
+
+    def authorize_user_to_view
+      if current_user != @post.user && !@post.published
+        flash[:notice] = 'You are not authorized to view that post'
         redirect_to posts_path
       end
     end
