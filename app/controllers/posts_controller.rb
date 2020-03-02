@@ -2,6 +2,7 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :authorize_user_to_edit, only: [:edit, :update, :destroy]
   before_action :authorize_user_to_view, only: [:show]
+  before_action :authorize_user_to_create, only: [:new, :create]
 
   # GET /posts
   # GET /posts.json
@@ -84,6 +85,13 @@ class PostsController < ApplicationController
     def authorize_user_to_view
       if current_user != @post.user && !@post.published
         flash[:notice] = 'You are not authorized to view that post'
+        redirect_to posts_path
+      end
+    end
+
+    def authorize_user_to_create
+      unless user_signed_in?
+        flash[:notice] = 'You are not authorized to create a post'
         redirect_to posts_path
       end
     end
