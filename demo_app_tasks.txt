@@ -1,0 +1,9 @@
+Tasks:
+
+https://github.com/heartcombo/devise
+
+Users should be connected to posts that they created
+Users not logged in should not be allowed to create posts
+Users should only be allowed to update their own posts
+Posts that are not published should only be visible/accessible to their authors
+
